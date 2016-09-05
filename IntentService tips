@@ -1,0 +1,27 @@
+public abstract class IntentService extends Service {
+  ...
+  @Override
+  public void onCreate() {
+    // TODO: It would be nice to have an option to hold a partial wakelock
+    // during processing, and to have a static startService(Context, Intent)
+    // method that would launch the service & hand off a wakelock.
+
+    super.onCreate();
+    HandlerThread thread = new HandlerThread("IntentService[" + mName + "]");
+    thread.start();
+
+    // 启动一个新的thread
+    mServiceLooper = thread.getLooper();
+    mServiceHandler = new ServiceHandler(mServiceLooper);
+  }
+  
+  // 在新的thread中处理事务，而非主线程
+  @WorkerThread
+  protected abstract void onHandleIntent(Intent intent);
+  ...
+  @Override
+  public void onDestroy() {
+      // 退出thread的looper循环 防止泄露
+      mServiceLooper.quit();
+  }
+}
