@@ -1,0 +1,39 @@
+java中的构造规则。
+
+父类：P.class 
+public class P {
+
+    public P() {
+        // TODO Auto-generated constructor stub
+        Log.i("test", "parent create");
+    }
+    
+    public P(String s) {
+        // TODO Auto-generated constructor stub
+        Log.i("test", "parent create s");
+    }
+}
+
+子类：C.class
+public class C extends P{
+    
+    public C() {
+        Log.i("test", "child create");
+    }
+    
+    public C(String s) {
+        Log.i("test", "child create s ");
+    }
+}
+
+当子类的构造函数没有super字段时，java会自动为子类增加一个无参的父类构造方法。
+所以如果通过new C()来构造一个C对象，实际的代码是：
+public C() {
+    // auto add
+    super.P();
+    // auto add end
+    
+    Log.i("test", "child create");
+}
+
+如果父类也没有无参构造方法，子类是不能在不super父类的情况下直接写出无参构造函数的。
